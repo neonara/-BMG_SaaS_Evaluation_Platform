@@ -1,6 +1,6 @@
 # ============================================================
-# BMG SaaS Evaluation Platform — docker-compose.yml
-# Version: 1.0 · March 2026
+# BMG Platform — docker-compose.yml
+# Version: 4.2
 # Host: OVH VPS · Ubuntu 24.04 · Docker Engine 26
 # ============================================================
 # Usage:
@@ -11,7 +11,6 @@
 #   Shell       : docker compose exec django_api bash
 # ============================================================
 
-version: "3.9"
 
 # ── Networks ────────────────────────────────────────────────
 networks:
@@ -31,7 +30,6 @@ volumes:
   static_files:
   next_cache:
   portainer_data:
-  celery_beat_data:
   gotenberg_tmp:
   selenium_tmp:
 
@@ -41,35 +39,35 @@ services:
   # ──────────────────────────────────────────────
   # NGINX — Reverse proxy + SSL termination
   # ──────────────────────────────────────────────
-  nginx:
-    image: nginx:1.26-alpine
-    container_name: bmg_nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-      - static_files:/var/www/static:ro
-    depends_on:
-      - django_api
-      - platform_frontend
-    networks:
-      - frontend_net
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # nginx:
+  #   image: nginx:1.26-alpine
+  #   container_name: bmg_nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/conf.d:/etc/nginx/conf.d:ro
+  #     - ./nginx/certs:/etc/nginx/certs:ro
+  #     - static_files:/var/www/static:ro
+  #   depends_on:
+  #     - django_api
+  #     - platform_frontend
+  #   networks:
+  #     - frontend_net
+  #   healthcheck:
+  #     test: ["CMD", "nginx", "-t"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
   # ──────────────────────────────────────────────
   # DJANGO API — Gunicorn + DRF + GraphQL
   # ──────────────────────────────────────────────
   django_api:
     build:
-      context: ./backend
+      context: ./bmg_backend
       dockerfile: Dockerfile
       target: production
     container_name: bmg_django
@@ -78,7 +76,7 @@ services:
       - "8000"
     volumes:
       - static_files:/app/staticfiles
-      - ./backend:/app:ro   # remove in prod, use COPY only
+      # - ./bmg_backend:/app:ro   # uncomment in dev only
     env_file:
       - .env.prod
     environment:
@@ -115,29 +113,29 @@ services:
   # ──────────────────────────────────────────────
   # NEXT.JS PLATFORM — Dashboard frontend
   # ──────────────────────────────────────────────
-  platform_frontend:
-    build:
-      context: ./frontend/platform
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-        NEXT_PUBLIC_GRAPHQL_URL: ${NEXT_PUBLIC_GRAPHQL_URL}
-        NEXT_PUBLIC_CLOUDINARY_CLOUD: ${NEXT_PUBLIC_CLOUDINARY_CLOUD}
-    container_name: bmg_platform
-    restart: unless-stopped
-    expose:
-      - "3000"
-    volumes:
-      - next_cache:/app/.next/cache
-    env_file:
-      - .env.prod
-    networks:
-      - frontend_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # platform_frontend:
+  #   build:
+  #     context: ./frontend/platform
+  #     dockerfile: Dockerfile
+  #     args:
+  #       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+  #       NEXT_PUBLIC_GRAPHQL_URL: ${NEXT_PUBLIC_GRAPHQL_URL}
+  #       NEXT_PUBLIC_CLOUDINARY_CLOUD: ${NEXT_PUBLIC_CLOUDINARY_CLOUD}
+  #   container_name: bmg_platform
+  #   restart: unless-stopped
+  #   expose:
+  #     - "3000"
+  #   volumes:
+  #     - next_cache:/app/.next/cache
+  #   env_file:
+  #     - .env.prod
+  #   networks:
+  #     - frontend_net
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
   # ──────────────────────────────────────────────
   # CELERY WORKER — Background tasks
@@ -145,7 +143,7 @@ services:
   # ──────────────────────────────────────────────
   celery_worker:
     build:
-      context: ./backend
+      context: ./bmg_backend
       dockerfile: Dockerfile
       target: production
     container_name: bmg_celery_worker
@@ -179,13 +177,12 @@ services:
   # ──────────────────────────────────────────────
   celery_beat:
     build:
-      context: ./backend
+      context: ./bmg_backend
       dockerfile: Dockerfile
       target: production
     container_name: bmg_celery_beat
     restart: unless-stopped
-    volumes:
-      - celery_beat_data:/app/beat
+
     env_file:
       - .env.prod
     environment:
@@ -202,7 +199,7 @@ services:
       celery -A config beat
         --loglevel=info
         --scheduler django_celery_beat.schedulers:DatabaseScheduler
-        --pidfile=/app/beat/celerybeat.pid
+        --pidfile=/tmp/celerybeat.pid
 
   # ──────────────────────────────────────────────
   # RABBITMQ — Message broker
@@ -220,7 +217,7 @@ services:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}   # fixed: was RABBITMQ_PASS
       - RABBITMQ_DEFAULT_VHOST=bmg
     networks:
       - backend_net
@@ -332,21 +329,18 @@ services:
       retries: 5
 
   # ──────────────────────────────────────────────
-  # PORTAINER — Docker management UI + remote
-  # Access: https://portainer.bmg.tn
+  # PORTAINER — Docker management UI
+  # Access: http://127.0.0.1:9000
   # ──────────────────────────────────────────────
   portainer:
-    image: portainer/portainer-ce:2.21
+    image: portainer/portainer-ce:latest
     container_name: bmg_portainer
     restart: unless-stopped
     ports:
-      - "127.0.0.1:9000:9000"   # localhost only — proxied by nginx
-      - "8000:8000"             # Portainer agent port
+      - "127.0.0.1:9000:9000"   # Web UI — localhost only, proxy via nginx
+      - "127.0.0.1:9001:8000"   # Portainer agent — fixed: was 8000:8000 (conflict with django)
     volumes:
       - portainer_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - frontend_net
-
-# NOTE: Vitrine Next.js is deployed on Vercel — NOT in this Compose file.
-# It connects to the Platform API via NEXT_PUBLIC_API_URL env var.

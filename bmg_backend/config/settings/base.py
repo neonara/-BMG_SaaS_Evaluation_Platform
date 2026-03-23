@@ -45,8 +45,8 @@ SHARED_APPS = [
     "graphene_django",
     # BMG shared apps
     "apps.tenants",      # TENANT, DOMAIN models
-    "apps.packs",        # PACK, PACK_TEST, VOUCHER, PACK_USER_ACCESS
-    "apps.payments",     # PAYMENT, INVOICE
+    #"apps.packs",        # PACK, PACK_TEST, VOUCHER, PACK_USER_ACCESS
+    #"apps.payments",     # PAYMENT, INVOICE
     "apps.audit",        # AUDIT_LOG
 ]
 
@@ -56,12 +56,12 @@ TENANT_APPS = [
     "django.contrib.contenttypes",
     # BMG tenant-scoped apps
     "apps.users",            # USER (tenant-scoped)
-    "apps.tests_module",     # TEST_MODEL, QUESTION, ANSWER_OPTION,
+    #"apps.tests_module",     # TEST_MODEL, QUESTION, ANSWER_OPTION,
                              # RESULT_BAND, PROFILE_DEFINITION
-    "apps.sessions_module",  # SESSION, SESSION_ASSIGNMENT
-    "apps.attempts",         # TEST_ATTEMPT, CANDIDATE_ANSWER
-    "apps.results",          # SHAREABLE_REPORT
-    "apps.notifications",    # NOTIFICATION
+   # "apps.sessions_module",  # SESSION, SESSION_ASSIGNMENT
+   # "apps.attempts",         # TEST_ATTEMPT, CANDIDATE_ANSWER
+   # "apps.results",          # SHAREABLE_REPORT
+   # "apps.notifications",    # NOTIFICATION
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [

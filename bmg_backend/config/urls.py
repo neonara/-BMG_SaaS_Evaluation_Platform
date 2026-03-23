@@ -28,7 +28,7 @@ urlpatterns = [
     path("graphql/", GraphQLView.as_view(graphiql=settings.DEBUG)),
 
     # ── Admin (Super Admin BMG only) ─────────────────────────────
-    path("bmg-admin/", admin.site.urls),
+  #  path("bmg-admin/", admin.site.urls),
 ]
 
 if settings.DEBUG:

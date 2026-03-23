@@ -1,5 +1,2 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
-urlpatterns = [path("", include(router.urls))]
+"""apps/users/urls.py — legacy stub, real URLs in urls/ subpackage."""
+from apps.users.urls.users import urlpatterns  # noqa: F401

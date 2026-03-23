@@ -13,5 +13,6 @@ class AuditConfig(AppConfig):
         Called once by Django after all apps are loaded.
         Deferred import prevents circular imports at module level.
         """
-        from apps.audit.signals import connect
-        connect()
+        # from apps.audit.signals import connect
+        # connect()
+        pass
