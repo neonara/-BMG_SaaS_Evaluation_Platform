@@ -1,0 +1,47 @@
+# French translations — BMG Platform
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: fr\n"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "French"
+msgstr "Français"
+
+msgid "Arabic"
+msgstr "Arabe"
+
+msgid "Login successful."
+msgstr "Connexion réussie."
+
+msgid "Invalid credentials."
+msgstr "Identifiants invalides."
+
+msgid "Account deactivated."
+msgstr "Votre compte a été désactivé."
+
+msgid "OTP sent to your email."
+msgstr "Un code de vérification a été envoyé à votre adresse e-mail."
+
+msgid "Invalid or expired OTP."
+msgstr "Le code est invalide ou a expiré."
+
+msgid "Password reset email sent."
+msgstr "Si cet e-mail existe, un lien de réinitialisation a été envoyé."
+
+msgid "Password reset link expired."
+msgstr "Ce lien a expiré. Veuillez en demander un nouveau."
+
+msgid "Registration successful."
+msgstr "Compte créé. Veuillez vérifier votre adresse e-mail."
+
+msgid "Email already in use."
+msgstr "Un compte avec cet e-mail existe déjà."
+
+msgid "Account deactivation notice"
+msgstr "Votre compte a été désactivé"
+
+msgid "Data recovery link valid for 30 days."
+msgstr "Vous pouvez récupérer vos données dans les 30 jours en utilisant le lien ci-dessous."

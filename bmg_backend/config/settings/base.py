@@ -53,6 +53,8 @@ TENANT_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "apps.users",
+    "apps.social_accounts",
+    "apps.multi_language",
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -208,10 +211,23 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ── i18n ─────────────────────────────────────────────────────
-LANGUAGE_CODE = "en-us"
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGE_CODE = "en"
 TIME_ZONE     = "Africa/Tunis"
 USE_I18N      = True
+USE_L10N      = True
 USE_TZ        = True
+
+LANGUAGES = [
+    ("en", _("English")),
+    ("fr", _("French")),
+    ("ar", _("Arabic")),
+]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+# Arabic is RTL — the frontend reads this via /api/v1/languages/
+LANGUAGE_RTL_CODES = ["ar"]
 
 # ── External services ─────────────────────────────────────────
 GOTENBERG_URL = env("GOTENBERG_URL", default="http://gotenberg:3001")
@@ -235,6 +251,16 @@ from config.settings.throttle_settings import (  # noqa: E402
 )
 REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = REST_FRAMEWORK_THROTTLE_CLASSES
 REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]   = DEFAULT_THROTTLE_RATES
+
+
+# ── Social OAuth ──────────────────────────────────────────────
+SOCIAL_AUTH_GOOGLE_CLIENT_ID       = env("GOOGLE_CLIENT_ID",       default="")
+SOCIAL_AUTH_GOOGLE_CLIENT_SECRET   = env("GOOGLE_CLIENT_SECRET",   default="")
+SOCIAL_AUTH_GOOGLE_REDIRECT_URI    = env("GOOGLE_REDIRECT_URI",    default="http://localhost:8000/api/v1/auth/social/google/callback/")
+
+SOCIAL_AUTH_LINKEDIN_CLIENT_ID     = env("LINKEDIN_CLIENT_ID",     default="")
+SOCIAL_AUTH_LINKEDIN_CLIENT_SECRET = env("LINKEDIN_CLIENT_SECRET", default="")
+SOCIAL_AUTH_LINKEDIN_REDIRECT_URI  = env("LINKEDIN_REDIRECT_URI",  default="http://localhost:8000/api/v1/auth/social/linkedin/callback/")
 
 # ── Celery Beat schedule ──────────────────────────────────────
 from config.celery_beat_schedule import CELERY_BEAT_SCHEDULE  # noqa: E402

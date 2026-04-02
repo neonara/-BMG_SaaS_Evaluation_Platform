@@ -14,6 +14,12 @@ urlpatterns = [
     # ── Users & Auth ─────────────────────────────────────────────
     path("users/",        include("apps.users.urls.users")),
 
+    # ── Social OAuth ─────────────────────────────────────────────
+    path("auth/social/",  include("apps.social_accounts.urls")),
+
+    # ── Multilingual ─────────────────────────────────────────────
+    path("languages/",    include("apps.multi_language.urls")),
+
     # ── Test models ──────────────────────────────────────────────
     # path("tests/",        include("apps.tests_module.urls")),
 

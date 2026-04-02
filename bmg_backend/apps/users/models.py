@@ -72,6 +72,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Timestamp when account was deactivated (used by GDPR purge task)
     deactivated_at = models.DateTimeField(null=True, blank=True)
 
+    # Language preference — FK to multi_language.Language (nullable = use platform default)
+    preferred_language = models.ForeignKey(
+        "multi_language.Language",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="users",
+        db_column="preferred_language_code",
+    )
+
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)

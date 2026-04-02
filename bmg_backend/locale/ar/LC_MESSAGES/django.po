@@ -1,0 +1,47 @@
+# Arabic translations — BMG Platform (RTL)
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ar\n"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "French"
+msgstr "الفرنسية"
+
+msgid "Arabic"
+msgstr "العربية"
+
+msgid "Login successful."
+msgstr "تم تسجيل الدخول بنجاح."
+
+msgid "Invalid credentials."
+msgstr "بيانات الاعتماد غير صحيحة."
+
+msgid "Account deactivated."
+msgstr "تم تعطيل حسابك."
+
+msgid "OTP sent to your email."
+msgstr "تم إرسال رمز التحقق إلى بريدك الإلكتروني."
+
+msgid "Invalid or expired OTP."
+msgstr "الرمز غير صحيح أو منتهي الصلاحية."
+
+msgid "Password reset email sent."
+msgstr "إذا كان هذا البريد موجوداً، فقد تم إرسال رابط إعادة التعيين."
+
+msgid "Password reset link expired."
+msgstr "انتهت صلاحية هذا الرابط. يرجى طلب رابط جديد."
+
+msgid "Registration successful."
+msgstr "تم إنشاء الحساب. يرجى التحقق من بريدك الإلكتروني."
+
+msgid "Email already in use."
+msgstr "يوجد حساب بهذا البريد الإلكتروني بالفعل."
+
+msgid "Account deactivation notice"
+msgstr "تم تعطيل حسابك"
+
+msgid "Data recovery link valid for 30 days."
+msgstr "يمكنك استرداد بياناتك خلال 30 يوماً باستخدام الرابط أدناه."
