@@ -23,7 +23,7 @@ urlpatterns = [
 
     # ── Admin ─────────────────────────────────────────────────
     path("bmg-admin/", admin.site.urls),
-    ]
+]
 urlpatterns += docs_urlpatterns                  
 
 
